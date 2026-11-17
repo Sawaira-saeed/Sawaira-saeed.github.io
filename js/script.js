@@ -23,6 +23,11 @@ document.addEventListener("DOMContentLoaded", () => {
   initProjectFilters();
   initContactForm();
   initGitHub();
+  initCustomCursor();
+  initParticles();
+  initTyping();
+  initHeroParallax();
+  initStatsCounter();
 });
 
 /* ===== Footer year ===== */
@@ -299,4 +304,195 @@ function languageColor(lang) {
     "TypeScript": "#3178C6", "Vue": "#41B883", "Flutter": "#54C5F8"
   };
   return colors[lang] || "#60A5FA";
+}
+/* ============================================================
+   ENHANCEMENTS: Cursor, Particles, Typing, Parallax, Stats
+   ============================================================ */
+
+/* ===== Custom Cursor (dot + trailing ring) ===== */
+function initCustomCursor() {
+  const dot = document.getElementById("cursorDot");
+  const ring = document.getElementById("cursorRing");
+  if (!dot || !ring) return;
+  if (window.matchMedia("(hover: none)").matches) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  window.addEventListener("mousemove", e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + "px";
+    dot.style.top = my + "px";
+  });
+
+  function loop() {
+    rx += (mx - rx) * 0.18;
+    ry += (my - ry) * 0.18;
+    ring.style.left = rx + "px";
+    ring.style.top = ry + "px";
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  // grow on interactive elements
+  const hoverables = "a, button, .chip, .filter-btn, .project-card, .skill-card, .cert-card, input, textarea, .tl-card";
+  document.addEventListener("mouseover", e => {
+    if (e.target.closest(hoverables)) { dot.classList.add("hovering"); ring.classList.add("hovering"); }
+  });
+  document.addEventListener("mouseout", e => {
+    if (e.target.closest(hoverables)) { dot.classList.remove("hovering"); ring.classList.remove("hovering"); }
+  });
+}
+
+/* ===== Particle Network Background ===== */
+function initParticles() {
+  const canvas = document.getElementById("particleCanvas");
+  if (!canvas) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const ctx = canvas.getContext("2d");
+  let w, h, particles = [];
+  const COUNT = window.innerWidth < 768 ? 35 : 70;
+  const MAX_DIST = 130;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  for (let i = 0; i < COUNT; i++) {
+    particles.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 1.8 + 0.6
+    });
+  }
+
+  let mouseX = -1000, mouseY = -1000;
+  window.addEventListener("mousemove", e => { mouseX = e.clientX; mouseY = e.clientY; });
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+
+      // mouse repulsion
+      const dxm = p.x - mouseX, dym = p.y - mouseY;
+      const dm = Math.sqrt(dxm * dxm + dym * dym);
+      if (dm < 120) {
+        p.x += (dxm / dm) * 1.2;
+        p.y += (dym / dm) * 1.2;
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(96, 165, 250, 0.7)";
+      ctx.fill();
+
+      for (let j = i + 1; j < particles.length; j++) {
+        const q = particles[j];
+        const dx = p.x - q.x, dy = p.y - q.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MAX_DIST) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = "rgba(59, 130, 246, " + (0.18 * (1 - dist / MAX_DIST)) + ")";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ===== Typing Animation for Hero Role ===== */
+function initTyping() {
+  const el = document.getElementById("typedRole");
+  if (!el) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const roles = [
+    "Software Engineer",
+    "AI/ML Engineer",
+    "Deep Learning Engineer",
+    "Data Science Enthusiast",
+    "Problem Solver"
+  ];
+  let roleIdx = 0, charIdx = 0, deleting = false;
+
+  function tick() {
+    const current = roles[roleIdx];
+    if (!deleting) {
+      el.textContent = current.slice(0, ++charIdx);
+      if (charIdx === current.length) {
+        deleting = true;
+        return setTimeout(tick, 1800);
+      }
+    } else {
+      el.textContent = current.slice(0, --charIdx);
+      if (charIdx === 0) {
+        deleting = false;
+        roleIdx = (roleIdx + 1) % roles.length;
+      }
+    }
+    setTimeout(tick, deleting ? 45 : 90);
+  }
+  tick();
+}
+
+/* ===== Hero Visual Parallax (mouse-based tilt) ===== */
+function initHeroParallax() {
+  const card = document.querySelector(".visual-card");
+  if (!card) return;
+  if (window.matchMedia("(hover: none)").matches) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const hero = document.querySelector(".hero");
+  hero.addEventListener("mousemove", e => {
+    const rect = hero.getBoundingClientRect();
+    const cx = (e.clientX - rect.left) / rect.width - 0.5;
+    const cy = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = "perspective(900px) rotateY(" + (cx * 10) + "deg) rotateX(" + (-cy * 10) + "deg)";
+  });
+  hero.addEventListener("mouseleave", () => {
+    card.style.transform = "perspective(900px) rotateY(0) rotateX(0)";
+  });
+}
+
+/* ===== Animated Stats Counter ===== */
+function initStatsCounter() {
+  const nums = document.querySelectorAll(".hs-num[data-count]");
+  if (!nums.length) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    nums.forEach(n => n.textContent = n.dataset.count);
+    return;
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.count, 10);
+      let cur = 0;
+      const step = Math.max(1, Math.floor(target / 30));
+      const timer = setInterval(() => {
+        cur += step;
+        if (cur >= target) { cur = target; clearInterval(timer); }
+        el.textContent = cur + (target >= 8 ? "+" : "");
+      }, 40);
+      observer.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+
+  nums.forEach(n => observer.observe(n));
 }

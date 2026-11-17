@@ -40,6 +40,11 @@
 </head>
 <body>
 
+  <!-- Custom cursor + particle background -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+  <canvas class="particle-canvas" id="particleCanvas"></canvas>
+
   <!-- ===== NAVIGATION ===== -->
   <nav class="navbar navbar-expand-lg fixed-top custom-nav" id="mainNav">
     <div class="container">
@@ -76,8 +81,10 @@
   <header id="home" class="hero">
     <div class="hero-bg">
       <div class="grid-overlay"></div>
+      <div class="aurora"></div>
       <div class="blob blob-1"></div>
       <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
     </div>
 
     <div class="container">
@@ -85,7 +92,7 @@
         <div class="col-lg-6 hero-text" data-reveal>
           <p class="hero-hello"><i class="fa-solid fa-hand-sparkles"></i> HELLO, I'M</p>
           <h1 class="hero-name">SAWAIRA SAEED</h1>
-          <h2 class="hero-title"><span class="typed">Software Engineer</span> <span class="pipe">|</span> AI/ML Engineer</h2>
+          <h2 class="hero-title"><span class="typed" id="typedRole">Software Engineer</span><span class="type-cursor">|</span></h2>
           <p class="hero-intro">
             I am a Software Engineer passionate about developing intelligent applications and solving
             real-world problems through Artificial Intelligence, Machine Learning, Deep Learning and Data Analytics.
@@ -102,6 +109,15 @@
             <a href="https://github.com/Sawaira-saeed" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
             <a href="https://www.linkedin.com/in/sawaira-saeed-880ba42b3" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
             <a href="mailto:sawairasaeed63@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+            <a href="https://wa.me/923151555246" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="hs"><span class="hs-num" data-count="8">0</span><span class="hs-label">Projects</span></div>
+            <div class="hs-divider"></div>
+            <div class="hs"><span class="hs-num" data-count="4">0</span><span class="hs-label">Certifications</span></div>
+            <div class="hs-divider"></div>
+            <div class="hs"><span class="hs-num">3.65</span><span class="hs-label">CGPA</span></div>
           </div>
         </div>
 
@@ -216,8 +232,7 @@
             <div class="skill-chips">
               <span class="chip"><i class="fa-brands fa-python"></i> Python</span>
               <span class="chip"><i class="fa-solid fa-database"></i> SQL</span>
-              <span class="chip"><i class="fa-brands fa-js"></i> JavaScript</span>
-              <span class="chip"><i class="fa-solid fa-mobile-screen"></i> Dart</span>
+              <span class="chip"><i class="fa-solid fa-code"></i> C++</span>
             </div>
           </div>
         </div>
@@ -603,6 +618,10 @@
             <a href="https://github.com/Sawaira-saeed" target="_blank" rel="noopener" class="contact-item">
               <span class="ci-icon"><i class="fa-brands fa-github"></i></span>
               <span><strong>GitHub</strong><br>Sawaira-saeed</span>
+            </a>
+            <a href="https://wa.me/923151555246" target="_blank" rel="noopener" class="contact-item">
+              <span class="ci-icon"><i class="fa-brands fa-whatsapp"></i></span>
+              <span><strong>WhatsApp / Phone</strong><br>03151555246</span>
             </a>
             <div class="contact-item">
               <span class="ci-icon"><i class="fa-solid fa-location-dot"></i></span>
