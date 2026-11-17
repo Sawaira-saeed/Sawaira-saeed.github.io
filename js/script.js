@@ -9,7 +9,7 @@
    Until set, the form will show a helpful setup message instead of
    faking a success.
 */
-const CONTACT_FORM_ENDPOINT = ""; // <-- Formspree endpoint
+const CONTACT_FORM_ENDPOINT = "https://formspree.io/f/mrpqqezq"; // Formspree endpoint
 
 const GITHUB_USERNAME = "Sawaira-saeed";
 
