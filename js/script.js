@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initTyping();
   initHeroParallax();
   initStatsCounter();
+  initStagger();
+  initTimelineDraw();
 });
 
 /* ===== Footer year ===== */
@@ -495,4 +497,33 @@ function initStatsCounter() {
   }, { threshold: 0.5 });
 
   nums.forEach(n => observer.observe(n));
+}
+/* ===== Staggered reveal: assign delays to grouped cards ===== */
+function initStagger() {
+  const rows = document.querySelectorAll(".row");
+  rows.forEach(row => {
+    const items = row.querySelectorAll(":scope > [data-reveal]");
+    items.forEach((item, i) => {
+      if (i > 0 && i <= 6) item.setAttribute("data-delay", i);
+    });
+  });
+}
+
+/* ===== Timeline self-drawing line ===== */
+function initTimelineDraw() {
+  const timeline = document.querySelector(".timeline");
+  if (!timeline) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    timeline.classList.add("drawn");
+    return;
+  }
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        timeline.classList.add("drawn");
+        observer.unobserve(timeline);
+      }
+    });
+  }, { threshold: 0.15 });
+  observer.observe(timeline);
 }
